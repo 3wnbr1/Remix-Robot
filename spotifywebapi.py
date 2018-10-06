@@ -40,20 +40,28 @@ def create_request_headers():
         headers['Authorization'] = 'Bearer ' + token
         return headers
 
-def next_track(headers):
+def next_track():
+    sp = spotify_object()
+    headers = create_request_headers()
     r = requests.post("https://api.spotify.com/v1/me/player/next", headers=headers)
     return r.status_code
 
-def prev_track(headers):
+def prev_track():
+    sp = spotify_object()
+    headers = create_request_headers()
     r = requests.post("https://api.spotify.com/v1/me/player/previous", headers=headers)
     return r.status_code
 
-def pause_playback(headers):
+def pause_track():
+    sp = spotify_object()
+    headers = create_request_headers()
     r = requests.put("https://api.spotify.com/v1/me/player/pause", headers=headers)
     return r.status_code
 
-def start_playback(headers):
-    r = requests.put("https://api.spotify.com/v1/me/player/pause", headers=headers)
+def play_track():
+    sp = spotify_object()
+    headers = create_request_headers()
+    r = requests.put("https://api.spotify.com/v1/me/player/play", headers=headers)
     return r.status_code
 
 if __name__ == "__main__":
@@ -65,15 +73,19 @@ if __name__ == "__main__":
     print(headers)
 
     # next song
-    next_track(headers)
+    next_track()
 
     time.sleep(3)
 
     # previous song
-    prev_track(headers)
+    prev_track()
+
+    time.sleep(3)
 
     # pause playback
-    pause_playback(headers)
+    pause_track()
+
+    time.sleep(3)
 
     # start playback
-    start_playback(headers)
+    play_track()
