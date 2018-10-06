@@ -11,6 +11,7 @@ import argparse
 
 SERVER_URL="http://192.169.0.231:8000/results"
 
+TRAITE_EACH=1.0
 
 td=MoveTank(OUTPUT_A,OUTPUT_B)
 
@@ -27,9 +28,16 @@ def traiteOne():
         return "web server return status: %s" % rq.status_code
     fulldata=rq.text
     print("SRV>%s" % fulldata)
+    if fulldata[0:2]!='[[' and fulldata[0]=='[':
+        fulldata='['+fulldata+']'
     traiteOneData(fulldata)
     
 def traiteOneData( fulldata ):
+    """
+    splitted into 2: server vs motor comm
+    
+    param: fulldata: string returned by the server, if starts with a [ then interpreted as a JSON string
+    """
     if fulldata[0]=='[':
         try:
             data=json.loads(fulldata)
@@ -44,21 +52,24 @@ def traiteOneData( fulldata ):
         duration=one[2]
         
         if duration>0:
-            print("MTR> A(%d) B(%d) %d" % (motorA, motorB, duration))
+            print("MTR> A(%d) B(%d) %f" % (motorA, motorB, duration))
             td.on_for_seconds(SpeedPercent(motorA), SpeedPercent(motorB), duration)
         
     return ""
 
-traiteOneData('[0,0,0]')
 print("Verify the ev3dev motor interface is answering")
 traiteOneData('10,10,1')
 traiteOneData('-10,-10,1')
 
-traiteOneData('[[10,10,1],[-10,-10,1]]')
+traiteOneData('[[10,10,1],[-10,-10,1],[255,255,0.3],[-255,-255,0.3]]')
 
 
 while True:
+    curtime=time.time()
     ret=traiteOne()
-    if len(ret)>0:
-        print( "ERR> %s" % ret)
-    time.sleep(0.5)
+    if ret and len(ret)>0:
+        print( "%s-ERR> %s" % (time.strftime('%H:%M:%S'), ret) )
+    
+    time2next=time.time()-curtime
+    if time2next<TRAITE_EACH:
+        time.sleep(TRAITE_EACH-time2next)
