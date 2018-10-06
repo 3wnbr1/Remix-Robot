@@ -20,6 +20,9 @@ def findHuman(image):
     return NMS(rects)
 
 
-# Load test image
-image = cv2.imread("test.bmp")
-(height, width) = image.shape[:-1]
+def LargestRectangle(rects):
+    """Returns the coordinates of the biggest detected rectangle."""
+    surfaces = []
+    for rect in rects:
+        surfaces.append((rect[0]-rect[2]) * (rect[1]-rect[3]))
+    return rects[surfaces.index(max(surfaces))]
