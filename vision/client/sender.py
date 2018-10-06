@@ -1,3 +1,4 @@
+import
 import requests
 from capture import imageAsBase64
 
@@ -10,3 +11,7 @@ url = "http://" + server_ip + ":" + str(port) + path
 def send():
     """Send capture to server."""
     s.post(url, data=imageAsBase64())
+
+if __name__ == '__main__':
+    send()
+    time.sleep(0.15)

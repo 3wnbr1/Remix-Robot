@@ -35,6 +35,6 @@ class Frame:
                 return "0,0,0"
             else:
                 if self.extentration > 0:
-                    return str(MAX_SPEED, MAX_SPEED-self.extentration*SPEED_FACTOR, TIME)
+                    return str(MAX_SPEED)+","+str(MAX_SPEED-self.extentration*SPEED_FACTOR)+","+str(TIME)
                 else:
-                    return str(MAX_SPEED+self.extentration*SPEED_FACTOR,MAX_SPEED, TIME)
+                    return str(MAX_SPEED+self.extentration*SPEED_FACTOR)+","+str(MAX_SPEED)+","+str(TIME)

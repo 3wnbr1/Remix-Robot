@@ -1,21 +1,25 @@
+import io
 import cv2
+import time
 import base64
 
-RASPBERRY = False
+RASPBERRY = True
+
+if RASPBERRY:
+    from picamera.array import PiRGBArray
+    from picamera import PiCamera
+
+    camera = PiCamera()
+    camera.framerate = 5
+    rawCapture = PiRGBArray(camera, size=(720, 480))
+    time.sleep(2)
 
 def captureImage():
     """Capture image from raspberry pi."""
     if RASPBERRY:
-        from picamera.array import PiRGBArray
-        from picamera import PiCamera
-
-        camera = PiCamera()
-        rawCapture = PiRGBArray(camera, size=(640, 480))
-        # Initialize camera
-        time.sleep(0.1)
-
-        camera.capture(rawCapture, format="bgr")
-        return rawCapture.array
+        rawCapture.truncate(0)
+        for frame in camera.capture_continuous(rawCapture, format="bgr"):
+            return frame.array
     else:
         return cv2.imread("../test.bmp")
 

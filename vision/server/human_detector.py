@@ -25,11 +25,17 @@ def LargestRectangle(rects):
     surfaces = []
     for rect in rects:
         surfaces.append((rect[0]-rect[2]) * (rect[1]-rect[3]))
-    return rects[surfaces.index(max(surfaces))]
+    try:
+        rect = rects[surfaces.index(max(surfaces))]
+    except ValueError:
+        rect = None
+    return rect
 
 
 def exentrationPercentage(image, rect):
     """Return exentration in percent, can be negative."""
+    if rect is None:
+        return 0
     x = image.shape[1]
     center = rect[2] - rect[0] - x/2
     return round(center / x, 2)
@@ -37,6 +43,8 @@ def exentrationPercentage(image, rect):
 
 def heightPercentage(image, rect):
     """Return height in percent, strictly positive."""
+    if rect is None:
+        return 0
     y = image.shape[0]
     center = rect[3] - rect[1]
     return round(center / y, 2)
