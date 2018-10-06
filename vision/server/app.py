@@ -22,8 +22,7 @@ def upload():
         if len(buffer) >= 10:
             buffer.pop()
         buffer.append(Frame(cv2.imdecode(img, 1)))
-        frame = buffer[-1]
-        frame.process()
+        buffer[-1].process()
         return "Done"
     else:
         return abort(406)
@@ -33,6 +32,7 @@ def upload():
 def results():
     if len(buffer) == 0:
         return "0,0,0"
+    frame = buffer[-1]
     print("[Info] Excentration", frame.extentration)
     print("[Info] Height", frame.heigt)
     return frame.giveDirection()

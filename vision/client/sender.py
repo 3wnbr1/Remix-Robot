@@ -13,5 +13,6 @@ def send():
     s.post(url, data=imageAsBase64())
 
 if __name__ == '__main__':
-    send()
-    time.sleep(0.15)
+    while True:
+        send()
+        time.sleep(0.5)

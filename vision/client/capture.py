@@ -10,6 +10,7 @@ if RASPBERRY:
     from picamera import PiCamera
 
     camera = PiCamera()
+    camera.rotation = 180
     camera.framerate = 5
     rawCapture = PiRGBArray(camera, size=(720, 480))
     time.sleep(2)
