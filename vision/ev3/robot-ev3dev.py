@@ -18,6 +18,8 @@ WHEEL_PERIMETER = 2 * math.pi * WHEEL_RADIUS
 DISTANCE_TO_KEEP = 2
 ROTATION_MAX = 3
 
+DIFFERENTIAL = 1 # accelerate turn
+
 INVERTED = 1
 
 SPEED_MOTOR = 10 # 0..100 % 100=full speed
@@ -62,14 +64,14 @@ def traiteOneData( fulldata ):
             print("MTR> invalidated measure")
         else:
             distance_to_object = one[1]
-            shift = INVERTED * one[0]
+            shift = INVERTED * one[0] * DIFFERENTIAL
             move = math.sqrt( ( distance_to_object - DISTANCE_TO_KEEP ) ** 2 + shift ** 2 )
             rotation = move / WHEEL_PERIMETER
             if rotation>ROTATION_MAX:
                 rotation=ROTATION_MAX
             if shift < 0:
                 # turn left
-                if move != 0:
+                if distance_to_object != 0:
                     motorA = 1 - (-shift)/distance_to_object
                     motorB = 1
                 else:
@@ -77,7 +79,7 @@ def traiteOneData( fulldata ):
                     motorB = 0
             else:
                 # turn right
-                if move != 0:
+                if distance_to_object != 0:
                     motorA = 1
                     motorB = 1 - (shift)/distance_to_object
                 else:
@@ -109,6 +111,8 @@ parser.add_argument('--rotation', default=3, type=int,
                     help='Maximum acceptable rotation')
 parser.add_argument('--inverted', default=1, action="store_true",
                     help='Invert left/right')
+parser.add_argument('--differential', default=1, type=float,
+                    help='differential accelerate left/right')
 
 
 args = parser.parse_args()
@@ -120,6 +124,8 @@ INVERTED = 1
 if args.inverted:
     INVERTED = -1
 
+DIFFERENTIAL = args.differential
+
 TEST_OFFLINE = args.test
 
 if not TEST_OFFLINE:
@@ -130,6 +136,7 @@ if not TEST_OFFLINE:
 print("Distance to keep to object: %.1f m" % DISTANCE_TO_KEEP)
 print("Wheel perimeter: %.2f m" % WHEEL_PERIMETER)
 print("Maximum rotation: %d" % ROTATION_MAX)
+print("Differential Accelerate rotation: %d" % DIFFERENTIAL)
 
 if TEST_OFFLINE:
     print("Verify the ev3dev motor interface is answering")
