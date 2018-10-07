@@ -35,7 +35,7 @@ class Frame:
     def giveDirection(self):
         """Giving direction to the robot. -> v_right, v_left, time."""
 
-        if self.rect is not None and is not self.retrieved:
+        if self.rect is not None and not self.retrieved:
             if self.distance < DISTANCE_THRESHOLD or abs(self.extentration) > EXENTRATION_THRESHOLD:
                 self.retrieved = True
                 return str(self.extentration) + "," + str(self.distance) + ",1"
