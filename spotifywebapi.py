@@ -64,6 +64,24 @@ def play_track():
     r = requests.put("https://api.spotify.com/v1/me/player/play", headers=headers)
     return r.status_code
 
+def low_volume():
+    sp = spotify_object()
+    headers = create_request_headers()
+    r = requests.put("https://api.spotify.com/v1/me/player/volume?volume_percent=20", headers=headers)
+    return r.status_code
+
+def high_volume():
+    sp = spotify_object()
+    headers = create_request_headers()
+    r = requests.put("https://api.spotify.com/v1/me/player/volume?volume_percent=100", headers=headers)
+    return r.status_code
+
+def medium_volume():
+    sp = spotify_object()
+    headers = create_request_headers()
+    r = requests.put("https://api.spotify.com/v1/me/player/volume?volume_percent=50", headers=headers)
+    return r.status_code
+
 if __name__ == "__main__":
     # handles asking for the token
     sp = spotify_object()
