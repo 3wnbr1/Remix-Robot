@@ -11,6 +11,7 @@ app = Flask(__name__)
 
 
 buffer = []
+stop = False
 
 
 @app.route('/upload', methods=['POST'])
@@ -30,7 +31,7 @@ def upload():
 
 @app.route('/results', methods=['GET'])
 def results():
-    if len(buffer) == 0:
+    if len(buffer) == 0 or stop:
         return "0,0,0"
     frame = buffer[-1]
     if not frame.processed:
@@ -56,6 +57,13 @@ def debug():
             return send_file('/tmp/img.jpg')
         else:
             return "No processed yet"
+
+@app.route('/bot', methods=['POST'])
+def bot():
+    if request.data == 'start':
+        stop = False
+    elif request.data == 'stop':
+        stop = True
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000, debug=True)

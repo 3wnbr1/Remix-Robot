@@ -1,5 +1,5 @@
 import time
-from human_detector import findHuman, LargestRectangle, exentrationPercentage, distanceToObject
+from human_detector import findHuman, LargestRectangle, exentrationPercentage, distanceToObject, preprocess
 
 
 MAX_SPEED = 255
@@ -21,6 +21,7 @@ class Frame:
 
     def process(self):
         """Method to process the frame."""
+        self.image = preprocess(self.image)
         self.rect = LargestRectangle(findHuman(self.image))
         if self.rect is not None:
             self.extentration = exentrationPercentage(self.image, self.rect)
