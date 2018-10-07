@@ -3,7 +3,7 @@ import numpy as np
 from imutils.object_detection import non_max_suppression
 
 
-FOCAL = 70
+FOCAL = 60
 HUMAN_WIDTH = 10
 
 
@@ -43,15 +43,6 @@ def exentrationPercentage(image, rect):
     x = image.shape[1]
     center = rect[2] - rect[0] - x/2
     return round(center / x, 2)
-
-
-def heightPercentage(image, rect):
-    """Return height in percent, strictly positive."""
-    if rect is None:
-        return 0
-    y = image.shape[0]
-    center = rect[3] - rect[1]
-    return round(center / y, 2)
 
 
 def distanceToObject(rect):

@@ -36,7 +36,7 @@ def results():
     if not frame.processed:
         frame = buffer[-2]
     print("[Info] Excentration", frame.extentration)
-    print("[Info] Height", frame.heigt)
+    print("[Info] Distance", frame.distance)
     return frame.giveDirection()
 
 
@@ -50,7 +50,6 @@ def debug():
             img = copy.deepcopy(image.image)
             if image.rect is not None:
                 xa, ya, xb, yb = image.rect
-                print("[Debug] Xa", xa, "Xb", xb, "Ya", ya, "Yb", yb)
                 cv2.rectangle(img, (xa, ya), (xb, yb), (0, 255, 0), 2)
                 cv2.putText(img, "Distance to object (m): "+str(image.distance), (10,10), cv2.FONT_HERSHEY_PLAIN, 1, 255)
             cv2.imwrite('/tmp/img.jpg', img)
