@@ -18,6 +18,11 @@ def NMS(hog_rects_results):
     return non_max_suppression(rects, probs=None, overlapThresh=0.65)
 
 
+def preprocess(image):
+    image = cv2.medianBlur(image, 3)
+    image = cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)
+    return cv2.equalizeHist(image)
+
 def findHuman(image):
     """Returns the coordinates of a human person in an image with NMS applied."""
     (rects, weights) = hog.detectMultiScale(image, winStride=(4, 4), padding=(16, 16), scale=1.15)
@@ -41,8 +46,9 @@ def exentrationPercentage(image, rect):
     if rect is None:
         return 0
     x = image.shape[1]
-    center = rect[2] - rect[0] - x/2
-    return round(center / x, 2)
+    width = rect[2] - rect[0]
+    center = x/2 - (rect[0] + width/2)
+    return round(-1*center / x, 2)
 
 
 def distanceToObject(rect):
