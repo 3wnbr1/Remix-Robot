@@ -60,10 +60,14 @@ def debug():
 
 @app.route('/bot', methods=['POST'])
 def bot():
-    if request.data == 'start':
-        stop = False
-    elif request.data == 'stop':
-        stop = True
+    global stop
+    if request.method == 'POST':
+        d = request.data.decode('utf-8')
+        if d == 'start':
+            stop = False
+        elif d == 'stop':
+            stop = True
+        return "OK"
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000, debug=True)
