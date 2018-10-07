@@ -1,5 +1,5 @@
 import time
-from human_detector import findHuman, LargestRectangle, exentrationPercentage, heightPercentage
+from human_detector import findHuman, LargestRectangle, exentrationPercentage, distanceToObject
 
 
 MAX_SPEED = 255
@@ -7,7 +7,7 @@ SPEED_FACTOR = 100
 TIME = 0.3
 
 EXENTRATION_THRESHOLD = 0.1
-HEIGHT_THRESHOLD = 0.75
+DISTANCE_THRESHOLD = 2
 
 
 class Frame:
@@ -17,24 +17,26 @@ class Frame:
         self.image = image
         self.date = time.time()
         self.processed = False
+        self.retrieved = False
 
     def process(self):
         """Method to process the frame."""
         self.rect = LargestRectangle(findHuman(self.image))
-        self.extentration = exentrationPercentage(self.image, self.rect)
-        self.heigt = heightPercentage(self.image, self.rect)
-        self.processed = True
-        self.forward = None
+        if self.rect is not None:
+            self.extentration = exentrationPercentage(self.image, self.rect)
+            self.processed = True
+            self.distance = distanceToObject(self.rect)
+        else:
+            self.extentration = None
+            self.processed = True
+            self.distance = None
+            self.forward = None
 
     def giveDirection(self):
         """Giving direction to the robot. -> v_right, v_left, time."""
-        if self.heigt >= HEIGHT_THRESHOLD:
-            return "0,0,0"
-        else:
-            if abs(self.extentration) <= EXENTRATION_THRESHOLD:
-                return "0,0,0"
-            else:
-                if self.extentration > 0:
-                    return str(MAX_SPEED, MAX_SPEED-self.extentration*SPEED_FACTOR, TIME)
-                else:
-                    return str(MAX_SPEED+self.extentration*SPEED_FACTOR,MAX_SPEED, TIME)
+
+        if self.rect is not None and not self.retrieved:
+            if self.distance < DISTANCE_THRESHOLD or abs(self.extentration) > EXENTRATION_THRESHOLD:
+                self.retrieved = True
+                return str(self.extentration) + "," + str(self.distance) + ",1"
+        return "0,0,0"

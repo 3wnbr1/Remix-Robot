@@ -3,6 +3,10 @@ import numpy as np
 from imutils.object_detection import non_max_suppression
 
 
+FOCAL = 60
+HUMAN_WIDTH = 10
+
+
 # Initialize detector
 hog = cv2.HOGDescriptor()
 hog.setSVMDetector(cv2.HOGDescriptor_getDefaultPeopleDetector())
@@ -16,7 +20,7 @@ def NMS(hog_rects_results):
 
 def findHuman(image):
     """Returns the coordinates of a human person in an image with NMS applied."""
-    (rects, weights) = hog.detectMultiScale(image, winStride=(4, 4), padding=(8, 8), scale=1.05)
+    (rects, weights) = hog.detectMultiScale(image, winStride=(4, 4), padding=(16, 16), scale=1.15)
     return NMS(rects)
 
 
@@ -25,18 +29,22 @@ def LargestRectangle(rects):
     surfaces = []
     for rect in rects:
         surfaces.append((rect[0]-rect[2]) * (rect[1]-rect[3]))
-    return rects[surfaces.index(max(surfaces))]
+    try:
+        rect = rects[surfaces.index(max(surfaces))]
+    except ValueError:
+        rect = None
+    return rect
 
 
 def exentrationPercentage(image, rect):
     """Return exentration in percent, can be negative."""
+    if rect is None:
+        return 0
     x = image.shape[1]
     center = rect[2] - rect[0] - x/2
     return round(center / x, 2)
 
 
-def heightPercentage(image, rect):
-    """Return height in percent, strictly positive."""
-    y = image.shape[0]
-    center = rect[3] - rect[1]
-    return round(center / y, 2)
+def distanceToObject(rect):
+    """Return approximate distance to object in meters."""
+    return round((HUMAN_WIDTH*FOCAL)/(rect[2] - rect[0]), 2)
