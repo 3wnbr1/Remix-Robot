@@ -1,4 +1,4 @@
-import
+import time
 import requests
 from capture import imageAsBase64
 

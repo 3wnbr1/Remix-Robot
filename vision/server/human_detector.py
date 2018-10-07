@@ -3,6 +3,10 @@ import numpy as np
 from imutils.object_detection import non_max_suppression
 
 
+FOCAL = 70
+HUMAN_WIDTH = 10
+
+
 # Initialize detector
 hog = cv2.HOGDescriptor()
 hog.setSVMDetector(cv2.HOGDescriptor_getDefaultPeopleDetector())
@@ -48,3 +52,8 @@ def heightPercentage(image, rect):
     y = image.shape[0]
     center = rect[3] - rect[1]
     return round(center / y, 2)
+
+
+def distanceToObject(rect):
+    """Return approximate distance to object in meters."""
+    return round((HUMAN_WIDTH*FOCAL)/(rect[2] - rect[0]), 2)

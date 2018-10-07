@@ -1,5 +1,5 @@
 import time
-from human_detector import findHuman, LargestRectangle, exentrationPercentage, heightPercentage
+from human_detector import findHuman, LargestRectangle, exentrationPercentage, heightPercentage, distanceToObject
 
 
 MAX_SPEED = 255
@@ -24,17 +24,11 @@ class Frame:
         self.extentration = exentrationPercentage(self.image, self.rect)
         self.heigt = heightPercentage(self.image, self.rect)
         self.processed = True
+        self.distance = distanceToObject(self.rect)
         self.forward = None
 
     def giveDirection(self):
         """Giving direction to the robot. -> v_right, v_left, time."""
-        if self.heigt >= HEIGHT_THRESHOLD:
-            return "0,0,0"
-        else:
-            if abs(self.extentration) <= EXENTRATION_THRESHOLD:
-                return "0,0,0"
-            else:
-                if self.extentration > 0:
-                    return str(MAX_SPEED)+","+str(MAX_SPEED-self.extentration*SPEED_FACTOR)+","+str(TIME)
-                else:
-                    return str(MAX_SPEED+self.extentration*SPEED_FACTOR)+","+str(MAX_SPEED)+","+str(TIME)
+        if self.heigt < HEIGHT_THRESHOLD or abs(self.extentration) > EXENTRATION_THRESHOLD:
+            return str(self.extentration) + "," + str(self.distance) + ",1"
+        return "0,0,0"
