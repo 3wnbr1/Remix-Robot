@@ -20,7 +20,7 @@ def NMS(hog_rects_results):
 
 def findHuman(image):
     """Returns the coordinates of a human person in an image with NMS applied."""
-    (rects, weights) = hog.detectMultiScale(image, winStride=(4, 4), padding=(8, 8), scale=1.05)
+    (rects, weights) = hog.detectMultiScale(image, winStride=(4, 4), padding=(16, 16), scale=1.15)
     return NMS(rects)
 
 
